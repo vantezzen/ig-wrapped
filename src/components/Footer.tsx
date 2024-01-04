@@ -30,8 +30,8 @@ function Footer() {
       </div>
       <div className="text-center mb-6 text-xs">
         <MutedText>
-          Instagram is a registered trademark of Bytedance Ltd. This website is
-          not affiliated with or endorsed by Instagram or Bytedance Ltd.
+          Instagram is a registered trademark of Meta Technologies This website
+          is not affiliated with or endorsed by Instagram or Meta Technologies
         </MutedText>
         <MutedText>
           Spotify is a registered trademark of Spotify AB. TrueShuffle is not
