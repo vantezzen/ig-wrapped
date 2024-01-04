@@ -1,0 +1,50 @@
+{
+  "name": "instagram-wrapped",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "fix": "next lint --fix"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@radix-ui/react-accordion": "^1.1.1",
+    "@radix-ui/react-slot": "^1.0.1",
+    "@sentry/nextjs": "^7.53.0",
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "20.2.0",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "@types/seedrandom": "^3.0.5",
+    "autoprefixer": "10.4.14",
+    "class-variance-authority": "^0.6.0",
+    "clsx": "^1.2.1",
+    "dayjs": "^1.11.7",
+    "debug": "^4.3.4",
+    "eslint": "8.40.0",
+    "eslint-config-next": "13.4.2",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.220.0",
+    "next": "13.4.2",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-countup": "^6.4.2",
+    "react-dom": "18.2.0",
+    "react-transition-group": "^4.4.5",
+    "seedrandom": "^3.0.5",
+    "tailwind-merge": "^1.12.0",
+    "tailwindcss": "3.3.2",
+    "tailwindcss-animate": "^1.0.5",
+    "ts-node": "^10.9.1",
+    "typescript": "5.0.4",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.12",
+    "@types/react-transition-group": "^4.4.6"
+  }
+}
