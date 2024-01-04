@@ -316,7 +316,7 @@ function InstagramWrappedAppPage() {
         />
       )}
 
-      {page === "play" && wrapped?.demoMode && (
+      {page === "play" && wrapped?.demoMode && !localStorage.getItem("_hide_demo") && (
         <div className="fixed bottom-12 left-12 right-12 z-0 opacity-60 text-zinc-500 break-words">
           <h2 className="text-2xl md:text-4xl font-bold">Demo Mode</h2>
           <p className="text-sm">
