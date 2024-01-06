@@ -89,7 +89,7 @@ export default class WrappedCreator {
       zip.files["connections/followers_and_following/following.json"];
     if (followingFile) {
       debug("getAccountConnections: followingFile");
-      const following = JSON.parse(await followingFile.async("string"));
+      const following = await this.readZipFile(followingFile);
       output.following = following.relationships_following.map(
         (f: any) => f.string_list_data[0]
       );
@@ -99,7 +99,7 @@ export default class WrappedCreator {
       zip.files["connections/followers_and_following/followers_1.json"];
     if (followersFile) {
       debug("getAccountConnections: followersFile");
-      const followers = JSON.parse(await followersFile.async("string"));
+      const followers = await this.readZipFile(followersFile);
       output.followers = followers.map((f: any) => f.string_list_data[0]);
     }
 
@@ -109,9 +109,7 @@ export default class WrappedCreator {
       ];
     if (recentlyUnfollowedFile) {
       debug("getAccountConnections: recentlyUnfollowedFile");
-      const recentlyUnfollowed = JSON.parse(
-        await recentlyUnfollowedFile.async("string")
-      );
+      const recentlyUnfollowed = await this.readZipFile(recentlyUnfollowedFile);
       output.recentlyUnfollowed = this.removeOutdatedEntries(
         recentlyUnfollowed.relationships_unfollowed_users.map(
           (f: any) => f.string_list_data[0]
@@ -125,8 +123,8 @@ export default class WrappedCreator {
       ];
     if (recentFollowRequestsFile) {
       debug("getAccountConnections: recentFollowRequestsFile");
-      const recentFollowRequests = JSON.parse(
-        await recentFollowRequestsFile.async("string")
+      const recentFollowRequests = await this.readZipFile(
+        recentFollowRequestsFile
       );
       output.recentFollowRequests = this.removeOutdatedEntries(
         recentFollowRequests.relationships_permanent_follow_requests.map(
@@ -149,8 +147,8 @@ export default class WrappedCreator {
       ];
     if (generalAccountInformationFile) {
       debug("getAccountInformation: generalAccountInformationFile");
-      const generalAccountInformation = JSON.parse(
-        await generalAccountInformationFile.async("string")
+      const generalAccountInformation = await this.readZipFile(
+        generalAccountInformationFile
       );
       const profile = generalAccountInformation.profile_user[0];
       output.username = profile.string_map_data.Username.value;
@@ -165,9 +163,7 @@ export default class WrappedCreator {
     output.changes = [];
     if (profileChangesFile) {
       debug("getAccountInformation: profileChangesFile");
-      const profileChanges = JSON.parse(
-        await profileChangesFile.async("string")
-      );
+      const profileChanges = await this.readZipFile(profileChangesFile);
       output.changes = this.removeOutdatedEntries(
         profileChanges.profile_profile_change.map((c: any) => ({
           changed: c.string_map_data.Changed.value,
@@ -180,8 +176,8 @@ export default class WrappedCreator {
       zip.files["your_instagram_activity/content/profile_photos.json"];
     if (profilePhotoChangesFile) {
       debug("getAccountInformation: profilePhotoChangesFile");
-      const profilePhotoChanges = JSON.parse(
-        await profilePhotoChangesFile.async("string")
+      const profilePhotoChanges = await this.readZipFile(
+        profilePhotoChangesFile
       );
 
       output.changes = output.changes.concat(
@@ -200,8 +196,8 @@ export default class WrappedCreator {
       ];
     if (privacyStatusChangesFile) {
       debug("getAccountInformation: privacyStatusChangesFile");
-      const privacyStatusChanges = JSON.parse(
-        await privacyStatusChangesFile.async("string")
+      const privacyStatusChanges = await this.readZipFile(
+        privacyStatusChangesFile
       );
 
       const privacyChanges = this.removeOutdatedEntries(
@@ -232,8 +228,8 @@ export default class WrappedCreator {
       ];
     if (generalAccountInformationFile) {
       debug("getDirectMessages: generalAccountInformationFile");
-      const generalAccountInformation = JSON.parse(
-        await generalAccountInformationFile.async("string")
+      const generalAccountInformation = await this.readZipFile(
+        generalAccountInformationFile
       );
       const profile = generalAccountInformation.profile_user[0];
       ownName = profile.string_map_data.Name.value;
@@ -246,7 +242,7 @@ export default class WrappedCreator {
     );
     for (const file of directMessageFiles) {
       debug("getDirectMessages: directMessageFiles: ", file.name);
-      const messages = JSON.parse(await file.async("string"));
+      const messages = await this.readZipFile(file);
 
       const messagesInThread = this.removeOutdatedEntries(
         messages.messages.map((m: any) => ({
@@ -277,7 +273,7 @@ export default class WrappedCreator {
       zip.files["your_instagram_activity/comments/post_comments_1.json"];
     if (commentsFile) {
       debug("getActivity: commentsFile");
-      const comments = JSON.parse(await commentsFile.async("string"));
+      const comments = await this.readZipFile(commentsFile);
       output.comments = this.removeOutdatedEntries(
         comments.map((c: any) => ({
           href: "",
@@ -291,7 +287,7 @@ export default class WrappedCreator {
       zip.files["your_instagram_activity/likes/liked_comments.json"];
     if (likedCommentsFile) {
       debug("getActivity: likedCommentsFile");
-      const likedComments = JSON.parse(await likedCommentsFile.async("string"));
+      const likedComments = await this.readZipFile(likedCommentsFile);
       output.likedComments = this.removeOutdatedEntries(
         likedComments.likes_comment_likes.map((c: any) => c.string_list_data[0])
       );
@@ -301,7 +297,7 @@ export default class WrappedCreator {
       zip.files["your_instagram_activity/likes/liked_posts.json"];
     if (likedPostsFile) {
       debug("getActivity: likedPostsFile");
-      const likedPosts = JSON.parse(await likedPostsFile.async("string"));
+      const likedPosts = await this.readZipFile(likedPostsFile);
       output.likedPosts = this.removeOutdatedEntries(
         likedPosts.likes_media_likes.map((c: any) => c.string_list_data[0])
       );
@@ -313,8 +309,8 @@ export default class WrappedCreator {
       zip.files["logged_information/recent_searches/account_searches.json"];
     if (recentAccountSearchesFile) {
       debug("getActivity: recentAccountSearchesFile");
-      const recentAccountSearches = JSON.parse(
-        await recentAccountSearchesFile.async("string")
+      const recentAccountSearches = await this.readZipFile(
+        recentAccountSearchesFile
       );
       output.recentSearches.accounts = this.removeOutdatedEntries(
         recentAccountSearches.searches_user.map((c: any) => ({
@@ -331,8 +327,8 @@ export default class WrappedCreator {
       ];
     if (recentWordOrPhraseSearchesFile) {
       debug("getActivity: recentWordOrPhraseSearchesFile");
-      const recentWordOrPhraseSearches = JSON.parse(
-        await recentWordOrPhraseSearchesFile.async("string")
+      const recentWordOrPhraseSearches = await this.readZipFile(
+        recentWordOrPhraseSearchesFile
       );
       output.recentSearches.wordOrPhrase = this.removeOutdatedEntries(
         recentWordOrPhraseSearches.searches_keyword.map((c: any) => ({
@@ -349,9 +345,7 @@ export default class WrappedCreator {
       ];
     if (participatedPollsFile) {
       debug("getActivity: participatedPollsFile");
-      const participatedPolls = JSON.parse(
-        await participatedPollsFile.async("string")
-      );
+      const participatedPolls = await this.readZipFile(participatedPollsFile);
       output.participatedPolls = this.removeOutdatedEntries(
         participatedPolls.story_activities_polls.map((c: any) => ({
           href: "",
@@ -367,7 +361,7 @@ export default class WrappedCreator {
       ];
     if (storyLikesFile) {
       debug("getActivity: storyLikesFile");
-      const storyLikes = JSON.parse(await storyLikesFile.async("string"));
+      const storyLikes = await this.readZipFile(storyLikesFile);
       output.storyLikes = this.removeOutdatedEntries(
         storyLikes.story_activities_story_likes.map((c: any) => ({
           href: "",
@@ -381,7 +375,7 @@ export default class WrappedCreator {
       zip.files["your_instagram_activity/content/stories.json"];
     if (storiesFile) {
       debug("getActivity: storiesFile");
-      const stories = JSON.parse(await storiesFile.async("string"));
+      const stories = await this.readZipFile(storiesFile);
       output.stories = this.removeOutdatedEntries(
         stories.ig_stories.map((c: any) => ({
           href: "",
@@ -395,7 +389,7 @@ export default class WrappedCreator {
       zip.files["your_instagram_activity/content/profile_photos.json"];
     if (profilePhotosFile) {
       debug("getActivity: profilePhotosFile");
-      const profilePhotos = JSON.parse(await profilePhotosFile.async("string"));
+      const profilePhotos = await this.readZipFile(profilePhotosFile);
       output.profilePhotos = this.removeOutdatedEntries(
         profilePhotos.ig_profile_picture.map((c: any) => ({
           href: "",
@@ -419,8 +413,8 @@ export default class WrappedCreator {
       ];
     if (externalTrackedPagesFile) {
       debug("getExternalTrackedPages: externalTrackedPagesFile");
-      const externalTrackedPages = JSON.parse(
-        await externalTrackedPagesFile.async("string")
+      const externalTrackedPages = await this.readZipFile(
+        externalTrackedPagesFile
       );
       output = externalTrackedPages.apps_and_websites_off_meta_activity.map(
         (c: any) => ({
@@ -439,5 +433,45 @@ export default class WrappedCreator {
     const earliestTimestamp = new Date().getTime() - 1000 * 60 * 60 * 24 * 365; // 1 year ago
 
     return data.filter((entry) => entry.timestamp * 1000 > earliestTimestamp);
+  }
+
+  // For some reason, the instagram unicode format is a bit unusual because it represents
+  // the bytes of the UTF-8 encoding of the emoji, rather than the code point of the emoji itself
+  // This function converts the unicode format to a normal UTF-8 string
+  private fixUnicode(str: string): string {
+    return str.replace(/(\\u[\dA-F]{4})+/gi, (match) =>
+      this.encodedEmojiToUtf8(match)
+    );
+  }
+
+  private encodedEmojiToUtf8(str: string): string {
+    // Remove the escape characters and split the string into bytes
+    const bytes = str
+      .match(/\\u[\dA-F]{4}/gi)
+      ?.map((u) => parseInt(u.replace("\\u", ""), 16));
+
+    if (!bytes) {
+      return str; // Return the original string if no unicode sequences are found
+    }
+
+    // Create a Uint8Array from the byte values
+    const byteArray = new Uint8Array(bytes);
+
+    // Use TextDecoder to decode the byte array into a string
+    const decoder = new TextDecoder("utf-8");
+    try {
+      return decoder.decode(byteArray);
+    } catch (e) {
+      return str; // In case of an error, return the original sequence
+    }
+  }
+
+  private async readZipFile(file: JSZip.JSZipObject): Promise<any> {
+    const arr = await file.async("uint8array");
+    const decoder = new TextDecoder("utf-8");
+    const text = decoder.decode(arr);
+    const fixedText = this.fixUnicode(text);
+
+    return JSON.parse(fixedText);
   }
 }

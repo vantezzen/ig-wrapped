@@ -14,6 +14,9 @@ import SpotifyFramePlayer from "../Spotify/FramePlayer";
 import MostSearchedTerm from "@/components/Wrapped/Slides/MostSearchedTerm";
 import { trackEvent } from "../analytics";
 import { Statistics } from "../Wrapped";
+import Emojis from "@/components/Wrapped/Slides/Emojis";
+import TotalWatchTime from "@/components/Wrapped/Slides/TotalWatchTime";
+import WatchTimeComparableActivity from "@/components/Wrapped/Slides/WatchTimeComparableActivity";
 
 export type Slide = {
   name: string;
@@ -38,6 +41,18 @@ const SLIDES: Slide[] = [
     name: "StoriesPosted",
     component: StoriesPosted,
     duration: 6000,
+  },
+  {
+    name: "TotalWatchTime",
+    component: TotalWatchTime,
+    duration: 6000,
+    skip: (statistics) => statistics.useTime.totalUsageTimeSec === 0,
+  },
+  {
+    name: "WatchTimeComparableActivity",
+    component: WatchTimeComparableActivity,
+    duration: 6000,
+    skip: (statistics) => statistics.useTime.totalUsageTimeSec === 0,
   },
   {
     name: "UnfollowedCount",
@@ -68,6 +83,12 @@ const SLIDES: Slide[] = [
       uri: "spotify:track:6UN73IYd0hZxLi8wFPMQij",
     },
     skip: (statistics) => statistics.activity.commentsWritten === 0,
+  },
+  {
+    name: "Emojis",
+    component: Emojis,
+    duration: 6000,
+    skip: (statistics) => statistics.emoji.mostUsedEmoji.count === 0,
   },
   {
     name: "ReelsShared",

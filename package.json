@@ -24,6 +24,7 @@
     "clsx": "^1.2.1",
     "dayjs": "^1.11.7",
     "debug": "^4.3.4",
+    "emoji-regex": "^10.3.0",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
     "eslint-plugin-unused-imports": "^2.0.0",

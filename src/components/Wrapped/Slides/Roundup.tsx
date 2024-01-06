@@ -7,9 +7,19 @@ import { Loader2, Share2 } from "lucide-react";
 import shareImage from "@/lib/utils/shareImage";
 import { trackEvent } from "@/lib/analytics";
 import Projects from "@/components/Projects";
+import formatTimeLength from "@/lib/utils/formatTimeLength";
 
 function Roundup({ statistics }: WrappedSlideProps) {
   const [isLoadingShareImage, setIsLoadingShareImage] = React.useState(false);
+
+  const { amount: totalWatchTimeAmount, unit: totalWatchTimeUnit } =
+    formatTimeLength(statistics.useTime.totalUsageTimeSec);
+  const totalWatchTimeMins = Math.round(
+    statistics.useTime.totalUsageTimeSec / 60
+  );
+
+  const { amount: averageSessionLengthAmount, unit: averageSessionLengthUnit } =
+    formatTimeLength(statistics.useTime.averageSessionLengthSec);
 
   return (
     <WrappedContainer bg="bg-zinc-900" text="text-starship-400">
@@ -54,6 +64,36 @@ function Roundup({ statistics }: WrappedSlideProps) {
                 </TableCell>
                 <TableCell>
                   {statistics.profile.unfollowedCount.toLocaleString()}
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell className="text-zinc-400">
+                  <strong className="text-starship-400">Usage</strong>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-zinc-400">
+                  Total time spent on Instagram
+                </TableCell>
+                <TableCell>
+                  {totalWatchTimeAmount} {totalWatchTimeUnit} (
+                  {totalWatchTimeMins} minutes)
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-zinc-400">Sessions</TableCell>
+                <TableCell>
+                  {statistics.useTime.totalSessions.toLocaleString()}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-zinc-400">
+                  Average session length
+                </TableCell>
+                <TableCell>
+                  {Math.abs(averageSessionLengthAmount)}{" "}
+                  {averageSessionLengthUnit}
                 </TableCell>
               </TableRow>
 
@@ -147,6 +187,44 @@ function Roundup({ statistics }: WrappedSlideProps) {
               <TableRow>
                 <TableCell className="text-zinc-400">Top sender</TableCell>
                 <TableCell>{statistics.directMessages.topSender}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-zinc-400">
+                  Most active hour
+                </TableCell>
+                <TableCell>
+                  {statistics.directMessages.mostActiveHour}:00
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell className="text-zinc-400">
+                  <strong className="text-starship-400">Emojis</strong>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-zinc-400">Most used emoji</TableCell>
+                <TableCell>
+                  {statistics.emoji.mostUsedEmoji.emoji} (
+                  {statistics.emoji.mostUsedEmoji.count.toLocaleString()})
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-zinc-400">
+                  Least used emoji
+                </TableCell>
+                <TableCell>
+                  {statistics.emoji.leastUsedEmoji.emoji} (
+                  {statistics.emoji.leastUsedEmoji.count.toLocaleString()})
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="text-zinc-400">
+                  Total emojis used
+                </TableCell>
+                <TableCell>
+                  {statistics.emoji.emojisUsed.toLocaleString()}
+                </TableCell>
               </TableRow>
 
               <TableRow>

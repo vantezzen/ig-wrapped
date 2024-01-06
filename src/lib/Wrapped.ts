@@ -16,6 +16,12 @@ import SearchStatistic, {
 import ExternalTrackingStatistic, {
   ExternalTrackingStatisticResult,
 } from "./Statistics/ExternalTrackingStatistics";
+import EmojiStatistic, {
+  EmojiStatisticResult,
+} from "./Statistics/EmojiStatistics";
+import UseTimeStatistic, {
+  UseTimeStatisticResult,
+} from "./Statistics/UseTimeStatistic";
 
 export type Statistics = {
   name: string;
@@ -24,6 +30,8 @@ export type Statistics = {
   activity: ActivityStatisticResult;
   search: SearchStatisticResult;
   externalTracking: ExternalTrackingStatisticResult;
+  emoji: EmojiStatisticResult;
+  useTime: UseTimeStatisticResult;
 };
 
 export const SAMPLE_STATISTICS: Statistics = {
@@ -41,6 +49,7 @@ export const SAMPLE_STATISTICS: Statistics = {
     postsShared: 105,
     tiktoksShared: 324,
     topSender: "Maria",
+    mostActiveHour: "20",
   },
   activity: {
     commentsWritten: 152,
@@ -60,6 +69,31 @@ export const SAMPLE_STATISTICS: Statistics = {
     totalPages: 28,
     totalEvents: 126,
     interestingPageNames: ["example.com", "example.org", "example.net"],
+  },
+  emoji: {
+    emojisUsed: 64,
+    mostUsedEmoji: {
+      emoji: "💀",
+      count: 293,
+    },
+    leastUsedEmoji: {
+      emoji: "🤔",
+      count: 1,
+    },
+  },
+  useTime: {
+    totalUsageTimeSec: 60 * 60 * 24 * 7 * 2,
+    totalSessions: 1474,
+    averageSessionLengthSec: 158,
+    longestSession: {
+      startTime: new Date(),
+      endTime: new Date(),
+      lengthSec: 120815,
+    },
+    mostActiveWeekday: {
+      weekday: "Tuesday",
+      averageUsageTime: 403.8139534883721,
+    },
   },
 };
 
@@ -91,6 +125,8 @@ export default class Wrapped {
       activity: this.calculateStatistic(ActivityStatistic),
       search: this.calculateStatistic(SearchStatistic),
       externalTracking: this.calculateStatistic(ExternalTrackingStatistic),
+      emoji: this.calculateStatistic(EmojiStatistic),
+      useTime: this.calculateStatistic(UseTimeStatistic),
     };
   }
 

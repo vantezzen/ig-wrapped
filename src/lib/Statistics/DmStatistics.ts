@@ -1,3 +1,4 @@
+import { InstagramDirectMessage } from "../types";
 import Statistic from "./Statistic";
 
 export type DmStatisticResult = {
@@ -9,6 +10,7 @@ export type DmStatisticResult = {
   tiktoksShared: number;
 
   topSender: string | null;
+  mostActiveHour: string | null;
 };
 
 export default class DmStatistic extends Statistic<DmStatisticResult> {
@@ -49,6 +51,9 @@ export default class DmStatistic extends Statistic<DmStatisticResult> {
           .length ?? 0,
 
       topSender,
+      mostActiveHour: this.getMostActiveHour(
+        this.wrapped.userData.directMessages?.filter((dm) => !dm.isUserSender)
+      ),
     };
   }
 
@@ -62,6 +67,23 @@ export default class DmStatistic extends Statistic<DmStatisticResult> {
       tiktoksShared: 0,
 
       topSender: null,
+      mostActiveHour: null,
     };
+  }
+
+  private getMostActiveHour(messages: InstagramDirectMessage[]) {
+    let hours: Record<number, number> = {};
+
+    for (const message of messages) {
+      const date = new Date(message.timestamp * 1000);
+      const hour = date.getHours();
+
+      hours[hour] = (hours[hour] ?? 0) + 1;
+    }
+
+    const sortedHours = Object.entries(hours).sort(([, a], [, b]) => b - a);
+    const mostActiveHour = sortedHours[0]?.[0] ?? null;
+
+    return mostActiveHour;
   }
 }
