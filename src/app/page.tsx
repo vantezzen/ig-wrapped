@@ -316,18 +316,20 @@ function InstagramWrappedAppPage() {
         />
       )}
 
-      {page === "play" && wrapped?.demoMode && !localStorage.getItem("_hide_demo") && (
-        <div className="fixed bottom-12 left-12 right-12 z-0 opacity-60 text-zinc-500 break-words">
-          <h2 className="text-2xl md:text-4xl font-bold">Demo Mode</h2>
-          <p className="text-sm">
-            This is a demo of Wrapped for Instagram. It does not use your real
-            Instagram data.
-            <br />
-            To see your own Wrapped, reload the page and upload your Instagram
-            data.
-          </p>
-        </div>
-      )}
+      {page === "play" &&
+        wrapped?.demoMode &&
+        !localStorage.getItem("_hide_demo") && (
+          <div className="fixed bottom-12 left-12 right-12 z-0 opacity-60 text-zinc-500 break-words">
+            <h2 className="text-2xl md:text-4xl font-bold">Demo Mode</h2>
+            <p className="text-sm">
+              This is a demo of Wrapped for Instagram. It does not use your real
+              Instagram data.
+              <br />
+              To see your own Wrapped, reload the page and upload your Instagram
+              data.
+            </p>
+          </div>
+        )}
     </div>
   );
 }

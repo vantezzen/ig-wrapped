@@ -44,8 +44,6 @@ export default class WrappedCreator {
         externalTrackedPages: await this.getExternalTrackedPages(zip),
       };
 
-      console.log(instagramData);
-
       this.investigateSchema(instagramData);
       return new Wrapped(instagramData);
     } catch (e) {
@@ -87,6 +85,7 @@ export default class WrappedCreator {
 
     const followingFile =
       zip.files["connections/followers_and_following/following.json"];
+
     if (followingFile) {
       debug("getAccountConnections: followingFile");
       const following = await this.readZipFile(followingFile);
@@ -152,7 +151,7 @@ export default class WrappedCreator {
       );
       const profile = generalAccountInformation.profile_user[0];
       output.username = profile.string_map_data.Username.value;
-      output.name = profile.string_map_data.Name.value;
+      output.name = profile.string_map_data?.Name?.value || undefined;
     }
 
     const profileChangesFile =
@@ -165,10 +164,18 @@ export default class WrappedCreator {
       debug("getAccountInformation: profileChangesFile");
       const profileChanges = await this.readZipFile(profileChangesFile);
       output.changes = this.removeOutdatedEntries(
-        profileChanges.profile_profile_change.map((c: any) => ({
-          changed: c.string_map_data.Changed.value,
-          timestamp: c.string_map_data["Change Date"].timestamp,
-        }))
+        profileChanges.profile_profile_change
+          .filter(
+            (c: any) =>
+              c.string_map_data?.["Change date"]?.timestamp ||
+              c.string_map_data?.["Change Date"]?.timestamp
+          )
+          .map((c: any) => ({
+            changed: c.string_map_data?.Changed?.value ?? "Unknown Change",
+            timestamp:
+              c.string_map_data["Change date"]?.timestamp ||
+              c.string_map_data["Change Date"]?.timestamp,
+          }))
       );
     }
 
@@ -232,7 +239,7 @@ export default class WrappedCreator {
         generalAccountInformationFile
       );
       const profile = generalAccountInformation.profile_user[0];
-      ownName = profile.string_map_data.Name.value;
+      ownName = profile.string_map_data?.Name?.value || "";
     }
 
     const directMessageFiles = Object.values(zip.files).filter(
