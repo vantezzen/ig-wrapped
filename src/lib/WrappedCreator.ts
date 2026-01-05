@@ -104,7 +104,7 @@ export default class WrappedCreator {
 
     const recentlyUnfollowedFile =
       zip.files[
-        "connections/followers_and_following/recently_unfollowed_profiles.json"
+      "connections/followers_and_following/recently_unfollowed_profiles.json"
       ];
     if (recentlyUnfollowedFile) {
       debug("getAccountConnections: recentlyUnfollowedFile");
@@ -118,7 +118,7 @@ export default class WrappedCreator {
 
     const recentFollowRequestsFile =
       zip.files[
-        "connections/followers_and_following/recent_follow_requests.json"
+      "connections/followers_and_following/recent_follow_requests.json"
       ];
     if (recentFollowRequestsFile) {
       debug("getAccountConnections: recentFollowRequestsFile");
@@ -142,7 +142,7 @@ export default class WrappedCreator {
 
     const generalAccountInformationFile =
       zip.files[
-        "personal_information/personal_information/personal_information.json"
+      "personal_information/personal_information/personal_information.json"
       ];
     if (generalAccountInformationFile) {
       debug("getAccountInformation: generalAccountInformationFile");
@@ -150,13 +150,23 @@ export default class WrappedCreator {
         generalAccountInformationFile
       );
       const profile = generalAccountInformation.profile_user[0];
-      output.username = profile.string_map_data.Username.value;
-      output.name = profile.string_map_data?.Name?.value || undefined;
+
+      // Handle both English and Spanish for username
+      output.username = 
+        profile.string_map_data.Username?.value ||
+        profile.string_map_data['Nombre de usuario']?.value ||
+        profile.string_map_data.Usuario?.value;
+
+      // Handle both English and Spanish for name
+      output.name = 
+        profile.string_map_data?.Name?.value || 
+        profile.string_map_data?.Nombre?.value || 
+        undefined;
     }
 
     const profileChangesFile =
       zip.files[
-        "personal_information/personal_information/profile_changes.json"
+      "personal_information/personal_information/profile_changes.json"
       ];
 
     output.changes = [];
@@ -199,7 +209,7 @@ export default class WrappedCreator {
 
     const privacyStatusChangesFile =
       zip.files[
-        "security_and_login_information/login_and_account_creation/account_privacy_changes.json"
+      "security_and_login_information/login_and_account_creation/account_privacy_changes.json"
       ];
     if (privacyStatusChangesFile) {
       debug("getAccountInformation: privacyStatusChangesFile");
@@ -231,7 +241,7 @@ export default class WrappedCreator {
 
     const generalAccountInformationFile =
       zip.files[
-        "personal_information/personal_information/personal_information.json"
+      "personal_information/personal_information/personal_information.json"
       ];
     if (generalAccountInformationFile) {
       debug("getDirectMessages: generalAccountInformationFile");
@@ -281,12 +291,23 @@ export default class WrappedCreator {
     if (commentsFile) {
       debug("getActivity: commentsFile");
       const comments = await this.readZipFile(commentsFile);
+      
+      // Add logging for debugging
+      console.log("First comment for debug:", JSON.stringify(comments[0], null, 2));
+      
       output.comments = this.removeOutdatedEntries(
-        comments.map((c: any) => ({
-          href: "",
-          value: c.string_map_data.Comment.value,
-          timestamp: c.string_map_data.Time.timestamp,
-        }))
+        comments.map((c: any) => {
+          // Check if Comment exists, otherwise use empty string
+          const commentValue = c.string_map_data?.Comment?.value || "";
+          // Check if Time exists, otherwise use 0
+          const timestamp = c.string_map_data?.Time?.timestamp || 0;
+          
+          return {
+            href: "",
+            value: commentValue,
+            timestamp: timestamp,
+          };
+        })
       );
     }
 
@@ -411,7 +432,7 @@ export default class WrappedCreator {
 
     const externalTrackedPagesFile =
       zip.files[
-        "apps_and_websites_off_of_instagram/apps_and_websites/your_activity_off_meta_technologies.json"
+      "apps_and_websites_off_of_instagram/apps_and_websites/your_activity_off_meta_technologies.json"
       ];
     if (externalTrackedPagesFile) {
       debug("getExternalTrackedPages: externalTrackedPagesFile");
