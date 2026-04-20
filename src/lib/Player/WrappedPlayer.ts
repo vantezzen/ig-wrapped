@@ -25,7 +25,7 @@ export type Slide = {
   spotify?: {
     uri: string;
   };
-  skip?: (statistics: Statistics) => boolean;
+  skip?: (_statistics: Statistics) => boolean;
 };
 
 const SLIDES: Slide[] = [
@@ -127,35 +127,88 @@ const SLIDES: Slide[] = [
 ];
 
 export default class WrappedPlayer extends EventEmitter {
-  public currentSlide: Slide | null = null;
+  public currentSlideIndex: number = 0;
+  public slides: Slide[] = [];
+  private statistics: Statistics | null = null;
 
-  constructor(public spotifyPlayer: SpotifyFramePlayer | null = null) {
+  constructor(public _spotifyPlayer: SpotifyFramePlayer | null = null) {
     super();
   }
 
-  public async play(statistics: Statistics) {
-    for (let i = 0; i < SLIDES.length; i++) {
-      const slide = SLIDES[i];
+  public initialize(statistics: Statistics) {
+    this.statistics = statistics;
 
+    // Filter slides based on skip logic
+    this.slides = SLIDES.filter((slide) => {
       if (slide.skip && slide.skip(statistics)) {
-        continue;
+        return false;
       }
+      return true;
+    });
 
-      this.currentSlide = slide;
-      console.log(`Playing slide`, this.currentSlide, this.spotifyPlayer);
-      if (this.currentSlide.spotify && this.spotifyPlayer) {
-        console.log(`Playing Spotify song`, this.currentSlide.spotify.uri);
-        await this.spotifyPlayer.playSong(this.currentSlide.spotify.uri);
-        console.log(`Loaded spotify song`);
-      }
-      trackEvent(`slide-${slide.name}`);
+    this.currentSlideIndex = 0;
+    this._loadCurrentSlide();
+    
+    // Emit update event to trigger UI re-render
+    this.emit("update");
+  }
 
+
+  public get currentSlide(): Slide | null {
+    return this.slides[this.currentSlideIndex] || null;
+  }
+
+  public nextSlide(): void {
+    if (this.currentSlideIndex < this.slides.length - 1) {
+      this.currentSlideIndex++;
+      this._loadCurrentSlide();
       this.emit("update");
-      await this.wait(slide.duration);
     }
   }
 
-  private wait(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+  public previousSlide(): void {
+    if (this.currentSlideIndex > 0) {
+      this.currentSlideIndex--;
+      this._loadCurrentSlide();
+      this.emit("update");
+    }
+  }
+
+  public jumpToSlide(index: number): void {
+    if (index >= 0 && index < this.slides.length) {
+      this.currentSlideIndex = index;
+      this._loadCurrentSlide();
+      this.emit("update");
+    }
+  }
+
+  private async _loadCurrentSlide() {
+    const slide = this.currentSlide;
+    if (!slide) return;
+
+    console.log(`Loading slide`, slide.name);
+
+    // Play Spotify track if available
+    if (slide.spotify && this._spotifyPlayer) {
+      console.log(`Playing Spotify song`, slide.spotify.uri);
+      try {
+        await this._spotifyPlayer.playSong(slide.spotify.uri);
+        console.log(`Loaded spotify song`);
+      } catch (error) {
+        console.error("Failed to play Spotify track", error);
+      }
+    }
+
+    // Track analytics
+    trackEvent(`slide-${slide.name}`);
+  }
+
+  public canGoNext(): boolean {
+    return this.currentSlideIndex < this.slides.length - 1;
+  }
+
+  public canGoPrevious(): boolean {
+    return this.currentSlideIndex > 0;
   }
 }
+

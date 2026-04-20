@@ -2,31 +2,18 @@
 import WrappedPlayer from "@/lib/Player/WrappedPlayer";
 import SpotifyFramePlayer from "@/lib/Spotify/FramePlayer";
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import WrappedContainer, { WrappedSlideProps } from "./WrappedContainer";
+import ProgressBar from "./Navigation/ProgressBar";
+import SlideControls from "./Navigation/SlideControls";
+import GestureHandler from "./Navigation/GestureHandler";
 
-const LoadingPlayerComponent = (props: WrappedSlideProps) => {
+const LoadingPlayerComponent = (_props: WrappedSlideProps) => {
   return (
     <WrappedContainer>
       <Loader2 size={32} className="animate-spin" />
     </WrappedContainer>
-  );
-};
-
-const TransitionWrapper = ({
-  children,
-  ...props
-}: {
-  children: React.ReactNode;
-} & any) => {
-  const nodeRef = useRef(null);
-  return (
-    <CSSTransition nodeRef={nodeRef} {...props}>
-      <div ref={nodeRef} className="w-full h-full">
-        {children}
-      </div>
-    </CSSTransition>
   );
 };
 
@@ -39,34 +26,78 @@ function WrappedPlayerComponent({
   const [player] = useState(() => new WrappedPlayer(spotify));
   const [, forceUpdateState] = useState(0);
   const forceUpdate = () => forceUpdateState((s) => s + 1);
+
   useEffect(() => {
     player.on("update", forceUpdate);
-    player.play(props.statistics);
+    
+    // Initialize player with statistics (replaces old play() method)
+    player.initialize(props.statistics);
 
     return () => {
       player.off("update", forceUpdate);
     };
-  }, []);
+  }, [player, props.statistics]);
 
   useEffect(() => {
-    player.spotifyPlayer = spotify;
-  }, [spotify]);
+    player._spotifyPlayer = spotify;
+  }, [spotify, player]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        player.previousSlide();
+      } else if (e.key === "ArrowRight") {
+        player.nextSlide();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [player]);
 
   const Component = player.currentSlide?.component || LoadingPlayerComponent;
 
   return (
-    <>
-      <TransitionGroup>
-        <TransitionWrapper
-          key={player.currentSlide?.name || "none"}
-          timeout={300}
-          classNames="fade"
-          unmountOnExit
-        >
-          <Component {...props} />
-        </TransitionWrapper>
-      </TransitionGroup>
-    </>
+    <div className="relative w-full h-full">
+      {/* Progress bars at top */}
+      <ProgressBar
+        totalSlides={player.slides.length}
+        currentSlide={player.currentSlideIndex}
+        onJumpToSlide={(index) => player.jumpToSlide(index)}
+      />
+
+      {/* Gesture-enabled slide container */}
+      <GestureHandler
+        onSwipeLeft={() => player.nextSlide()}
+        onSwipeRight={() => player.previousSlide()}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={player.currentSlideIndex}
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+            }}
+            className="w-full h-full"
+          >
+            <Component {...props} />
+          </motion.div>
+        </AnimatePresence>
+      </GestureHandler>
+
+      {/* Navigation controls */}
+      <SlideControls
+        onNext={() => player.nextSlide()}
+        onPrevious={() => player.previousSlide()}
+        canGoNext={player.canGoNext()}
+        canGoPrevious={player.canGoPrevious()}
+      />
+    </div>
   );
 }
 

@@ -34,6 +34,7 @@ export const InstagramProfileChangeSchema = z.object({
 export const InstagramAccountInformationSchema = z.object({
   username: z.string().optional(),
   name: z.string().optional(),
+  profilePicture: z.string().optional(),
   changes: z.array(InstagramProfileChangeSchema).optional(),
 });
 

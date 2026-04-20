@@ -37,10 +37,10 @@ const items = [
         much data you have on Instagram.
         <br />
         <br />
-        Once your data export is ready, you will receive an email - often this
-        only takes a few minutes. After your export is done you can download the
-        file from Instagram. You'll need to upload this file to Wrapped for
-        Instagram.
+        Once your data export is ready, you will receive an email with a link to download a <strong>ZIP file</strong>.
+        <br />
+        You'll need to upload this <strong>ZIP file</strong> directly to Wrapped for
+        Instagram. Do not unzip it.
       </>
     ),
   },

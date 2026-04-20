@@ -151,7 +151,19 @@ export default class WrappedCreator {
       );
       const profile = generalAccountInformation.profile_user[0];
       output.username = profile.string_map_data.Username.value;
+      output.username = profile.string_map_data.Username.value;
       output.name = profile.string_map_data?.Name?.value || undefined;
+    }
+
+    const profilePhotoFile = Object.values(zip.files).find(
+      (f) =>
+        f.name.startsWith("your_instagram_activity/media/profile_photos/") ||
+        f.name.startsWith("media/profile_photos/")
+    );
+    if (profilePhotoFile) {
+      debug("getAccountInformation: profilePhotoFile");
+      const blob = await profilePhotoFile.async("blob");
+      output.profilePicture = URL.createObjectURL(blob);
     }
 
     const profileChangesFile =

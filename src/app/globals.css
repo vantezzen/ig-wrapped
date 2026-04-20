@@ -80,24 +80,110 @@
   }
 }
 
-.fade-enter {
-  transform: translateY(100%);
+/* Spotify-Inspired Vibrant Gradients */
+:root {
+  /* Single color gradients */
+  --gradient-purple-pink: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  --gradient-blue-green: linear-gradient(135deg, #3B82F6 0%, #10B981 100%);
+  --gradient-orange-pink: linear-gradient(135deg, #F59E0B 0%, #EC4899 100%);
+  --gradient-purple-blue: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+  --gradient-green-teal: linear-gradient(135deg, #10B981 0%, #14B8A6 100%);
+  --gradient-pink-purple: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);
+  
+  /* Animated mesh gradient backgrounds */
+  --gradient-mesh-purple: radial-gradient(at 40% 20%, rgba(139, 92, 246, 0.8) 0px, transparent 50%),
+                          radial-gradient(at 80% 0%, rgba(236, 72, 153, 0.6) 0px, transparent 50%),
+                          radial-gradient(at 0% 50%, rgba(59, 130, 246, 0.5) 0px, transparent 50%),
+                          radial-gradient(at 80% 80%, rgba(168, 85, 247, 0.4) 0px, transparent 50%);
+                          
+  --gradient-mesh-blue: radial-gradient(at 30% 30%, rgba(59, 130, 246, 0.8) 0px, transparent 50%),
+                        radial-gradient(at 70% 0%, rgba(16, 185, 129, 0.6) 0px, transparent 50%),
+                        radial-gradient(at 10% 80%, rgba(20, 184, 166, 0.5) 0px, transparent 50%);
+                        
+  --gradient-mesh-celebration: radial-gradient(at 50% 20%, rgba(245, 158, 11, 0.8) 0px, transparent 50%),
+                               radial-gradient(at 10% 50%, rgba(236, 72, 153, 0.7) 0px, transparent 50%),
+                               radial-gradient(at 90% 50%, rgba(139, 92, 246, 0.6) 0px, transparent 50%);
 }
 
-.fade-enter-active {
-  transform: translateY(0%);
-  transition: transform 300ms;
+/* Gradient utility classes */
+.gradient-purple-pink {
+  background: var(--gradient-purple-pink);
 }
 
-.fade-exit {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  transform: translateY(0%);
+.gradient-blue-green {
+  background: var(--gradient-blue-green);
 }
 
-.fade-exit-active {
-  transform: translateY(-100%);
-  transition: transform 300ms;
+.gradient-orange-pink {
+  background: var(--gradient-orange-pink);
+}
+
+.gradient-purple-blue {
+  background: var(--gradient-purple-blue);
+}
+
+.gradient-green-teal {
+  background: var(--gradient-green-teal);
+}
+
+.gradient-pink-purple {
+  background: var(--gradient-pink-purple);
+}
+
+/* Animated gradient mesh backgrounds */
+.gradient-mesh-purple {
+  background: var(--gradient-mesh-purple), #1a1a2e;
+  background-size: 200% 200%;
+  animation: gradient-shift 15s ease-in-out infinite;
+}
+
+.gradient-mesh-blue {
+  background: var(--gradient-mesh-blue), #0f172a;
+  background-size: 200% 200%;
+  animation: gradient-shift 12s ease-in-out infinite;
+}
+
+.gradient-mesh-celebration {
+  background: var(--gradient-mesh-celebration), #1e1b4b;
+  background-size: 200% 200%;
+  animation: gradient-shift 10s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Glassmorphism utility */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-effect-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Text gradient utility */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+}
+
+.text-gradient-vibrant {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F59E0B 100%);
 }

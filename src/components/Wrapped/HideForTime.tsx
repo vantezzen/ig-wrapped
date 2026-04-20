@@ -12,7 +12,7 @@ function HideForTime({
     setTimeout(() => {
       setVisible(true);
     }, time);
-  }, []);
+  }, [time]);
 
   return (
     <div className={`${visible ? "opacity-100" : "opacity-0"}`}>{children}</div>

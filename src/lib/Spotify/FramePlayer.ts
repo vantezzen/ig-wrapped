@@ -1,4 +1,5 @@
 import EventEmitter from "events";
+import { EmbedController, SpotifyIframeApi } from "./spotify";
 
 export default class SpotifyFramePlayer extends EventEmitter {
   public embedController: EmbedController | null = null;

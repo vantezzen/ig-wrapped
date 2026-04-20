@@ -30,16 +30,22 @@ function IntroInformation({
             <MutedText className="break-words hyphens-auto">
               Wrapped for Instagram gives you stats on your Instagram activity.
               <br />
-              To use it, you'll need your Instagram data export from{" "}
+              <br />
+              To use it, request your data from{" "}
               <a
                 href="https://accountscenter.instagram.com/info_and_permissions/dyi/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline font-bold break-all"
               >
-                https://accountscenter.instagram.com/info_and_permissions/dyi/
+                Instagram Accounts Center
               </a>{" "}
               in the "<strong>JSON</strong>" format.
+              <br />
+              Instagram will email you a <strong>ZIP file</strong> (e.g., "instagram-username.zip").
+              <br />
+              <strong>Upload that ZIP file directly here.</strong>
+              <br />
               <br />
               Your exported data does not include login credentials! For more
               info on how to request your information, look at the FAQ section
